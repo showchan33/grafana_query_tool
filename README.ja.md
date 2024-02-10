@@ -1,70 +1,69 @@
-# About grafana_query_tool
+# grafana_query_toolの概要
 
-grafana_query_tool is a tool that enables the following operations in Grafana WebUI to be performed via CLI.
+grafana_query_toolは、GrafanaにおけるWebUIでの以下の操作をコマンドラインで実行可能にするツールです。
 
-* Login to Grafana WebUI
-* Enter your query in Grafana Explore
-* Download query execution results in CSV format
+* GrafanaのWebUIにログイン
+* Exploreでクエリを入力
+* クエリの実行結果をCSV形式でダウンロード
 
-# Requirement
+# 必要条件
 
-* Environment in which operation was verified
+* 動作確認環境
     * OS
         * Linux
             * Ubuntu 20.04
         * Mac OS
             * 14.2.1
-        * Not tested on Windows
-    * Grafana Version
+        * ※Windowsでの動作は未確認
+    * Grafanaのバージョン
         * v10.1.0 
-* Tool
+* ツール
     * Python3
-        * Version tested is 3.10 series
-    * Poerty or pip3
+        * 動作確認バージョンは3.10系
+    * Poerty または pip3
 
-# Preparation
+# 事前準備
 
-## Install Package
+## パッケージのインストール
 
-Install the packages necessary to run grafana_query_tool in one of the following ways.
+以下のいずれかの方法で、grafana_query_toolを動かすのに必要なパッケージをインストールします。
 
-### Method 1: Using Poetry
+### 方法1: Poetryを利用
 
 ```
 poetry install
 ```
 
-### Method 2: Using pip
+### 方法2: pipを利用
 
 ```
 pip3 install -r requirements.txt
 ```
 
-## Install Playwright
+## Playwrightのインストール
 
 ```
 playwright install-deps
 ```
 
-## Setting up credentials to login to Grafana
+## Grafanaにログインするための認証情報の設定
 
-Copy ``.env.sample`` as ``.env``.<br>
-Modify the following environment variables to match your environment.
+``.env.sample``を``.env``という名前でコピーします。<br>
+以下の環境変数を、お使いの環境に合わせてに変更します。
 
 ```shell:.env
 GRAFANA_URL="https://grafana.example.com"
 GRAFANA_USERNAME="username"
 GRAFANA_PASSWORD="password"
 ```
-
-Modification example
+↓ 変更例
 ```shell:.env
 GRAFANA_URL="https://grafana-your-site.example.com"
 GRAFANA_USERNAME="your-username"
 GRAFANA_PASSWORD="your-password"
 ```
 
-# Usage
+# 使い方
 
 ```
 $ python main.py -h
@@ -90,10 +89,10 @@ options:
 ```
 
 
-## An example of Usage
-Here is an example of getting ``node_memory_MemFree_bytes`` metrics with ``prometheus`` as the data source.
+## 利用例
+データソースに``prometheus``を指定して、``node_memory_MemFree_bytes``のメトリクスを取得する例です。
 
-### Execution command
+### 実行コマンド
 ```
 python3 main.py \
 prometheus \
@@ -103,9 +102,9 @@ prometheus \
 -o output/result.csv
 ```
 
-The example above uses the format ``yyyy-mm-dd HH:MM:SS`` as the time period for which to retrieve data. As an alternative, you can also specify relative times such as ``"now"`` or ``"now-1h"``.
+上の例ではデータを取得する期間として``yyyy-mm-dd HH:MM:SS``のフォーマットを使っていますが、``"now"``や``"now-1h"``のような相対的な時間も指定できます。
 
-### Output result
+### 出力結果
 ```
 Attempting to login to https://grafana-your-site.example.com
 Running a query in explore.
@@ -113,7 +112,7 @@ Downloading query results in progress.
 Saved results to output/result.csv
 ```
 
-### Example of CSV file output
+### CSVファイルの出力例
 
 ```result.csv
 "Time","node_memory_MemFree_bytes{app_kubernetes_io_component=""metrics"", app_kubernetes_io_instance=""prometheus"", app_kubernetes_io_managed_by=""Helm"", app_kubernetes_io_name=""prometheus-node-exporter"", app_kubernetes_io_part_of=""prometheus-node-exporter"", app_kubernetes_io_version=""1.6.0"", helm_sh_chart=""prometheus-node-exporter-4.22.0"", instance=""hostname-of-node:9100"", job=""kubernetes-service-endpoints"", namespace=""prometheus"", node=""node01"", service=""prometheus-prometheus-node-exporter""}"
