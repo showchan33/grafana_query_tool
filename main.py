@@ -1,7 +1,7 @@
 from playwright.sync_api import sync_playwright
 import argparse
 
-from grafana_query_tool.login import login
+from grafana_query_tool.login import login, logout
 from grafana_query_tool.utils import create_grafana_input_param
 from grafana_query_tool.query_export import exec_query, export_result
 from websession.websession import WebSession
@@ -9,11 +9,12 @@ from websession.websession import WebSession
 def create_args() -> argparse.Namespace:
 
   parser = argparse.ArgumentParser(
-    description='A tool to run queries in Grafana and download the results'
+    description='A tool to run queries in Grafana and download the results',
+    formatter_class=argparse.RawTextHelpFormatter,
   )
   parser.add_argument(
     'datasource',
-    help='Set the datasource (example: loki)'
+    help='Set the datasource (example: prometheus, loki)'
   )
   parser.add_argument(
     'query',
@@ -47,6 +48,12 @@ def create_args() -> argparse.Namespace:
     help='Specify the name of the output csv file',
     default=None,
   )
+  parser.add_argument(
+    '-g', '--grafana-version',
+    choices=["10.1", "10.4"],
+    help="Specify the version of Grafana to query. Default is 10.4",
+    default="10.4",
+  )
 
   return parser.parse_args()
 
@@ -65,7 +72,11 @@ if __name__ == '__main__':
 
     websession = WebSession(playwright, record_video=args.record_video)
 
-    websession = login(websession, args.env_file)
+    websession = login(
+      websession,
+      args.grafana_version,
+      args.env_file,
+    )
 
     websession = exec_query(
       websession,
@@ -73,7 +84,15 @@ if __name__ == '__main__':
       args.env_file,
     )
 
-    websession = export_result(websession, args.output_filename)
+    websession = export_result(
+      websession,
+      args.grafana_version,
+      args.output_filename,
+    )
+
+    websession = logout(
+      websession,
+    )
 
     websession.close()
 

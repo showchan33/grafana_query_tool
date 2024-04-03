@@ -16,7 +16,7 @@ grafana_query_toolは、GrafanaにおけるWebUIでの以下の操作をコマ�
             * 14.2.1
         * ※Windowsでの動作は未確認
     * Grafanaのバージョン
-        * v10.1.0 
+        * 10.1.0, 10.4.0
 * ツール
     * Python3
         * 動作確認バージョンは3.10系
@@ -67,7 +67,7 @@ GRAFANA_PASSWORD="your-password"
 
 ```
 $ python main.py -h
-usage: main.py [-h] [-i ORG_ID] [-r] [-e ENV_FILE] [-o OUTPUT_FILENAME] datasource query from_ to
+usage: main.py [-h] [-i ORG_ID] [-r] [-e ENV_FILE] [-o OUTPUT_FILENAME] [-g {10.1,10.4}] datasource query from_ to
 
 A tool to run queries in Grafana and download the results
 
@@ -86,6 +86,8 @@ options:
                         Specify the filename of enviroment variables (default: .env)
   -o OUTPUT_FILENAME, --output-filename OUTPUT_FILENAME
                         Specify the name of the output csv file
+  -g {10.1,10.4}, --grafana-version {10.1,10.4}
+                        Specify the version of Grafana to query. Default is 10.4
 ```
 
 

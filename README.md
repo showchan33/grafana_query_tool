@@ -16,7 +16,7 @@ grafana_query_tool is a tool that enables the following operations in Grafana We
             * 14.2.1
         * Not tested on Windows
     * Grafana Version
-        * v10.1.0 
+        * 10.1.0, 10.4.0
 * Tool
     * Python3
         * Version tested is 3.10 series
@@ -68,7 +68,7 @@ GRAFANA_PASSWORD="your-password"
 
 ```
 $ python main.py -h
-usage: main.py [-h] [-i ORG_ID] [-r] [-e ENV_FILE] [-o OUTPUT_FILENAME] datasource query from_ to
+usage: main.py [-h] [-i ORG_ID] [-r] [-e ENV_FILE] [-o OUTPUT_FILENAME] [-g {10.1,10.4}] datasource query from_ to
 
 A tool to run queries in Grafana and download the results
 
@@ -87,6 +87,8 @@ options:
                         Specify the filename of enviroment variables (default: .env)
   -o OUTPUT_FILENAME, --output-filename OUTPUT_FILENAME
                         Specify the name of the output csv file
+  -g {10.1,10.4}, --grafana-version {10.1,10.4}
+                        Specify the version of Grafana to query. Default is 10.4
 ```
 
 

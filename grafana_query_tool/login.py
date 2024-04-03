@@ -5,24 +5,39 @@ from websession.websession import WebSession
 
 def login(
   websession: WebSession,
+  grafana_version: str,
   env_file: str = ".env",
 ) -> WebSession:
 
   load_dotenv(env_file)
 
-  GRAFANA_USERNAME = os.getenv('GRAFANA_USERNAME')
-  GRAFANA_PASSWORD = os.getenv('GRAFANA_PASSWORD')
-  GRAFANA_URL = os.getenv('GRAFANA_URL')
+  grafana_username = os.getenv('GRAFANA_USERNAME')
+  grafana_password = os.getenv('GRAFANA_PASSWORD')
+  grafana_url = os.getenv('GRAFANA_URL')
 
-  print(f"Attempting to login to {GRAFANA_URL}.")
+  print(f"Attempting to login to {grafana_url}.")
 
-  websession.page.goto(f"{GRAFANA_URL}/login")
+  websession.page.goto(f"{grafana_url}/login")
   websession.page.get_by_placeholder("email or username").click()
-  websession.page.get_by_placeholder("email or username").fill(GRAFANA_USERNAME)
+  websession.page.get_by_placeholder("email or username").fill(grafana_username)
   websession.page.get_by_placeholder("password").click()
-  websession.page.get_by_placeholder("password").fill(GRAFANA_PASSWORD)
-  websession.page.get_by_label("Login button").click()
+  websession.page.get_by_placeholder("password").fill(grafana_password)
+  if grafana_version == "10.1":
+    websession.page.get_by_label("Login button").click()
+  else:
+    websession.page.get_by_test_id("data-testid Login button").click()
   time.sleep(1)
+
+  return websession
+
+def logout(
+  websession: WebSession,
+) -> WebSession:
+
+  print(f"Currently logged out.")
+
+  grafana_url = os.getenv('GRAFANA_URL')
+  websession.page.goto(f"{grafana_url}/logout")
 
   return websession
 

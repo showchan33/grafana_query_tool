@@ -51,6 +51,7 @@ def exec_query(
   query_string = create_query(grafana_input_param)
   query_string_url_encoded = urllib.parse.quote(query_string)
 
+  time.sleep(2)
   explore_url = f"{GRAFANA_URL}/explore?orgId={grafana_input_param.org_id}&left={query_string_url_encoded}"
   websession.page.goto(explore_url)
   time.sleep(1)
@@ -59,19 +60,25 @@ def exec_query(
 
 def export_result(
   websession: WebSession,
+  grafana_version: str,
   output_filename: str = None
 ) -> WebSession:
 
-  websession.page.get_by_label("Query inspector button").click()
-  time.sleep(1)
-
-  websession.page.get_by_label("Tab Data").click()
+  if grafana_version == "10.1":
+    websession.page.get_by_label("Query inspector button").click()
+    time.sleep(1)
+    websession.page.get_by_label("Tab Data").click()
+  else:
+    websession.page.get_by_role("button", name="Download").click()
   time.sleep(1)
 
   print("Downloading query results in progress.")
 
   with websession.page.expect_download() as download_info:
-    websession.page.get_by_role("button", name="Download CSV").click()
+    if grafana_version == "10.1":
+      websession.page.get_by_role("button", name="Download CSV").click()
+    else:
+      websession.page.get_by_role("menuitem", name="csv").click()
   download = download_info.value
 
   if output_filename is None:
